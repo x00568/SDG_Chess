@@ -11,13 +11,29 @@ public class Chess : MonoBehaviour
     //UI
     public Toggle WhiteTog;
     public Toggle BlackTog;
+    public GameObject GameOverBG;
+    public Text GameOverText;
+
     private GameObject StartPanel;
+    private Text TrunText;
+
+    public Texture2D image;
+    GUIStyle uistyle = new GUIStyle();
 
     void Awake()
     {
         StartPanel =GameObject.Find("Canvas/StartPanel");
+        TrunText = GameObject.Find("Canvas/GamePanel/TurnBG/TurnText").GetComponent<Text>();
+     
+       // GameOverText = GameObject.Find("Canvas/GamePanel/Result/Text").GetComponent<Text>();
         WhiteTog.onValueChanged.AddListener(WhiteChoose);
         BlackTog.onValueChanged.AddListener(BlackChoose);
+
+      
+        uistyle.normal.background = image;
+        uistyle.fontSize = 30;
+        uistyle.alignment = TextAnchor.MiddleCenter;
+        
     }
 
 
@@ -979,9 +995,8 @@ public class Chess : MonoBehaviour
     {
         if (starting)
         {
-
-            GUI.Box(new Rect(Screen.width / 2 - Screen.width / 20, Screen.height / 20, Screen.width / 10, Screen.height / 20), "Nueva Partida!");
             /*		
+             GUI.Box(new Rect(Screen.width / 2 - Screen.width / 20, Screen.height / 20, Screen.width / 10, Screen.height / 20), "Nueva Partida!");
             GUI.Box (new Rect (Screen.width / 10, Screen.height / 10, Screen.width / 10 * 8, Screen.height / 10 * 8), "");
             GUI.Box (new Rect (Screen.width / 10*2.5f, Screen.height / 10*3, Screen.width / 10, Screen.height / 10), "白色方");
             if(whiteAI){
@@ -1007,11 +1022,17 @@ public class Chess : MonoBehaviour
              */
             return;
         }
+    
+        if (white){
 
-        if (white)
-            GUI.Box(new Rect(10, 10, 150, 22), "Turno de las blancas!");
+            TrunText.text = "轮到白方了";  
+        }
         else
-            GUI.Box(new Rect(10, 10, 150, 22), "Turno de las negras!");
+        {
+            TrunText.text = "轮到黑方了";
+          
+        }
+
 
         if (rightCastling)
             if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 32, 150, 22), "Enroque Derecho"))
@@ -1048,16 +1069,24 @@ public class Chess : MonoBehaviour
 
         if (fin)
         {
-            if (white)
-                GUI.Box(new Rect(Screen.width - 160, 10, 150, 22), "Black wins!");
+            if (white){
+                GameOverText.text = "黑方胜";
+                GameOverBG.SetActive(true);
+            }
             else
-                GUI.Box(new Rect(Screen.width - 160, 10, 150, 22), "White wins!");
+            {
+            GameOverText.text = "白方胜";
+            GameOverBG.SetActive(true);
+            }
+                
+               
         }
         else
         {
+        
             if (!playing)
-                GUI.Box(new Rect(Screen.width - 160, 10, 150, 22), "Rendirse!");
-            else if (GUI.Button(new Rect(Screen.width - 160, 10, 150, 22), "Rendirse!"))
+                GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!",uistyle);
+            else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!",uistyle))
             {
                 theEnd();
                 white = false;
@@ -1274,6 +1303,8 @@ public class Chess : MonoBehaviour
         turnCD = Time.time;
 
         starting = true;
+        StartPanel.SetActive(true);
+        GameOverBG.SetActive(false);
     }
 
     void resetBoard()
