@@ -12,7 +12,7 @@ public class ChessMove
 
     public piece movingPiece;
 
-    public bool castling;
+    public bool castling ;
     public Vector2 initialPosRook;
     public Vector2 finalPosRook;
 
@@ -26,6 +26,7 @@ public class ChessMove
         if (castling)
         {
             ret = "Castling at " + ch[Mathf.RoundToInt(finalPos.x)] + Mathf.RoundToInt(finalPos.y);
+            Debug.Log(ret);
         }
         else
         {

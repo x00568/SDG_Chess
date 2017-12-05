@@ -30,11 +30,11 @@ public class Bouncy : MonoBehaviour {
 			
 		else{
 			if((Time.realtimeSinceStartup - cooldown) % 1f < 0.5f){
-                gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x + (0.2f * Time.deltaTime), gameObject.transform.localScale.y, gameObject.transform.localScale.z + (0.2f * Time.deltaTime));
-				//gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y+(0.2f*Time.deltaTime), gameObject.transform.position.z);
+                if (gameObject.transform.localScale.x<=0.75)
+                gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x + (0.2f * Time.deltaTime), gameObject.transform.localScale.y, gameObject.transform.localScale.z + (0.2f * Time.deltaTime));	
 			}else{
+                if (gameObject.transform.localScale.x >= 0.65)
                 gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x - (0.2f * Time.deltaTime), gameObject.transform.localScale.y, gameObject.transform.localScale.z - (0.2f * Time.deltaTime));
-				//gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y-(0.2f*Time.deltaTime), gameObject.transform.position.z);
 			}
 		}
 	}

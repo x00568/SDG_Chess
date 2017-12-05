@@ -13,6 +13,11 @@ public class Chess : MonoBehaviour
     public Toggle BlackTog;
     public GameObject GameOverBG;
     public Text GameOverText;
+    public GameObject Check;
+    public Text CheckText;
+
+    public GameObject KingChecked;
+    public Text KingCheckedText;
 
     private GameObject StartPanel;
     private Text TrunText;
@@ -22,20 +27,19 @@ public class Chess : MonoBehaviour
 
     void Awake()
     {
-        StartPanel =GameObject.Find("Canvas/StartPanel");
+        StartPanel = GameObject.Find("Canvas/StartPanel");
         TrunText = GameObject.Find("Canvas/GamePanel/TurnBG/TurnText").GetComponent<Text>();
-     
-       // GameOverText = GameObject.Find("Canvas/GamePanel/Result/Text").GetComponent<Text>();
+
+       //事件监听
         WhiteTog.onValueChanged.AddListener(WhiteChoose);
         BlackTog.onValueChanged.AddListener(BlackChoose);
 
-      
+        //GUI皮肤设置
         uistyle.normal.background = image;
         uistyle.fontSize = 30;
         uistyle.alignment = TextAnchor.MiddleCenter;
-        
-    }
 
+    }
 
     //象棋方形底盘
     public GameObject Square;
@@ -993,46 +997,15 @@ public class Chess : MonoBehaviour
 
     void OnGUI()
     {
-        if (starting)
-        {
-            /*		
-             GUI.Box(new Rect(Screen.width / 2 - Screen.width / 20, Screen.height / 20, Screen.width / 10, Screen.height / 20), "Nueva Partida!");
-            GUI.Box (new Rect (Screen.width / 10, Screen.height / 10, Screen.width / 10 * 8, Screen.height / 10 * 8), "");
-            GUI.Box (new Rect (Screen.width / 10*2.5f, Screen.height / 10*3, Screen.width / 10, Screen.height / 10), "白色方");
-            if(whiteAI){
-                if(GUI.Button (new Rect (Screen.width / 10*2, Screen.height / 10*4, Screen.width / 10 * 2, Screen.height / 10 * 2), "Ordenador"))
-                    whiteAI = false;
-            }else{
-                if(GUI.Button (new Rect (Screen.width / 10*2, Screen.height / 10*4, Screen.width / 10 * 2, Screen.height / 10 * 2), "Jugador"))
-                    whiteAI = true;
-            }
-            GUI.Box (new Rect (Screen.width / 10*6.5f, Screen.height / 10*3, Screen.width / 10, Screen.height / 10), "黑色方");
-            if(blackAI){
-                if(GUI.Button (new Rect (Screen.width / 10*6, Screen.height / 10*4, Screen.width / 10 * 2, Screen.height / 10 * 2), "Ordenador"))
-                    blackAI = false;
-            }else{
-                if(GUI.Button (new Rect (Screen.width / 10*6, Screen.height / 10*4, Screen.width / 10 * 2, Screen.height / 10 * 2), "Jugador"))
-                    blackAI = true;
-            }
-            if (GUI.Button(new Rect(Screen.width / 2 - Screen.width / 20, Screen.height / 10 * 9f, Screen.width / 10, Screen.height / 20), "Go!"))
-            {
-                starting = false;
-                GameObject.FindObjectOfType<ControlTemporal>().activo = true;
-            }
-             */
-            return;
-        }
-    
-        if (white){
 
-            TrunText.text = "轮到白方了";  
+        if (white)
+        {
+            TrunText.text = "轮到白方了";
         }
         else
         {
             TrunText.text = "轮到黑方了";
-          
         }
-
 
         if (rightCastling)
             if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 32, 150, 22), "Enroque Derecho"))
@@ -1060,33 +1033,44 @@ public class Chess : MonoBehaviour
                 }
             }
         }
-
         if (check)
-            GUI.Box(new Rect(10, 32, 150, 22), "CHECK!");
+        {
+            Check.gameObject.SetActive(true);
+            CheckText.text = "CHECK!";
+        }
+        else
+            Check.gameObject.SetActive(false);
+        // GUI.Box(new Rect(10, 32, 150, 22), "CHECK!");
 
         if (Time.time - checkedCooldown < 3)
-            GUI.Box(new Rect(Screen.width / 2 - 100, 20, 200, 22), "Ilegal Move: King checked!");
+        {
+            KingChecked.SetActive(true);
+            KingCheckedText.text = "Ilegal Move: King checked!";
+        }
+        else
+        {
+            KingChecked.SetActive(false);
+        }
+        //GUI.Box(new Rect(Screen.width / 2 - 100, 20, 200, 22), "Ilegal Move: King checked!");
 
         if (fin)
         {
-            if (white){
+            if (white)
+            {
                 GameOverText.text = "黑方胜";
                 GameOverBG.SetActive(true);
             }
             else
             {
-            GameOverText.text = "白方胜";
-            GameOverBG.SetActive(true);
+                GameOverText.text = "白方胜";
+                GameOverBG.SetActive(true);
             }
-                
-               
         }
         else
         {
-        
             if (!playing)
-                GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!",uistyle);
-            else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!",uistyle))
+                GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle);
+            else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle))
             {
                 theEnd();
                 white = false;
