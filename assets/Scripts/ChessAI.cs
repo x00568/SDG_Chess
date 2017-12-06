@@ -17,7 +17,6 @@ public class ChessAI : MonoBehaviour
     private Text AIText;
     private Image AIBG;
 
-
     private ChessSquare[,] board;
     private Chess chess;
 
@@ -715,21 +714,27 @@ public class ChessAI : MonoBehaviour
         switch (p)
         {
             case piece.Bishop:
+                Debug.Log("Bishop");
                 return 3;
 
             case piece.Rook:
+                Debug.Log("Rook");
                 return 5;
 
             case piece.Knight:
+                Debug.Log("Knight");
                 return 3;
 
             case piece.King:
+                Debug.Log("King");
                 return 1000;
 
             case piece.Pawn:
+                Debug.Log("Pawn");
                 return 1;
 
             case piece.Queen:
+                Debug.Log("Queen");
                 return 9;
 
             default:

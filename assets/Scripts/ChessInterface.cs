@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections; 
-public interface ChessMethod {
+using System.Collections;
+public interface ChessInterface
+{
     void StartGame();
     void Reset();
     void undo();

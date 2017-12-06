@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AttacksTable
+public class AttacksTable:AttackInterface
 {
 
     private ChessSquare[,] board;
@@ -46,7 +46,7 @@ public class AttacksTable
         return ret;
     }
 
-    void generateTable(side attacker)
+   public void generateTable(side attacker)
     {
         attacks = new piece[12, 12, 12, 12];
         for (int i = 0; i < 12; i++)
@@ -123,6 +123,7 @@ public class AttacksTable
 
     void generateBishop(int i, int j, bool Queen)
     {
+
         piece p = piece.Bishop;
         if (Queen)
             p = piece.Queen;
@@ -256,4 +257,5 @@ public class AttacksTable
         if (board[i + mov, j - 1].pieceSquare != piece.OutOfBoard)
             attacks[i + mov, j - 1, i, j] = piece.Pawn;
     }
+
 }

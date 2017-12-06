@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public enum piece { King, Queen, Pawn, Rook, Knight, Bishop, None, OutOfBoard };
 public enum side { Black, White, None, OutOfBoard };
 
-public class Chess : MonoBehaviour, ChessMethod
+public class Chess : MonoBehaviour, ChessInterface
 {
 
     //UI
@@ -322,6 +322,7 @@ public class Chess : MonoBehaviour, ChessMethod
     {
         ChessMove move = new ChessMove();
         move.castling = false;
+
         move.initialPos = new Vector2(selectedI, selectedJ);
         move.finalPos = new Vector2(i, j);
 
@@ -631,7 +632,8 @@ public class Chess : MonoBehaviour, ChessMethod
         history.Add(move);
         changeTurn();
     }
-    //未选择时
+
+    //选择棋子时，让其他棋子恢复原状
     public void Deselect()
     {
         leftCastling = false;
@@ -1079,25 +1081,23 @@ public class Chess : MonoBehaviour, ChessMethod
 
         if (fin)
         {
+            GameOverBG.SetActive(true);
             if (white)
-            {
                 GameOverText.text = "黑方胜";
-                GameOverBG.SetActive(true);
-            }
-            else
-            {
+            else 
                 GameOverText.text = "白方胜";
-                GameOverBG.SetActive(true);
-            }
         }
         else
         {
-            if (!playing)
-                GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle);
-            else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle))
+            if (starting == false)
             {
-                theEnd();
-                white = false;
+                if (!playing)
+                    GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle);
+                else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle))
+                {
+                    theEnd();
+                    white = false;
+                }
             }
         }
     }
