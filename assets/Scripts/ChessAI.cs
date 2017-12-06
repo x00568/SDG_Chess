@@ -166,21 +166,18 @@ public class ChessAI : MonoBehaviour
     {
         if (state == 1)
         {
-            //GUI.Box (new Rect (160, 10, 200, 22), "Shitty AI selecting piece...");
             AIBG.gameObject.SetActive(true);
             AIText.text = "电脑选择棋子";
             return;
         }
         if (state > 1)
         {
-            //GUI.Box (new Rect (160, 10, 200, 22), "Shitty AI thinking...");
             AIBG.gameObject.SetActive(true);
             AIText.text = "电脑正在思考";
             return;
         }
         if (state == 0 && Time.time - cooldown < 1)
         {
-            //GUI.Box (new Rect (160, 10, 200, 22), "Shitty AI moved!");
             AIBG.gameObject.SetActive(true);
             AIText.text = "电脑完成操作";
             return;

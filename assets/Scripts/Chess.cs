@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public enum piece { King, Queen, Pawn, Rook, Knight, Bishop, None, OutOfBoard };
 public enum side { Black, White, None, OutOfBoard };
 
-public class Chess : MonoBehaviour
+public class Chess : MonoBehaviour, ChessMethod
 {
 
     //UI
@@ -15,6 +15,7 @@ public class Chess : MonoBehaviour
     public Text GameOverText;
     public GameObject Check;
     public Text CheckText;
+    public Dropdown ModelList;
 
     public GameObject KingChecked;
     public Text KingCheckedText;
@@ -30,9 +31,10 @@ public class Chess : MonoBehaviour
         StartPanel = GameObject.Find("Canvas/StartPanel");
         TrunText = GameObject.Find("Canvas/GamePanel/TurnBG/TurnText").GetComponent<Text>();
 
-       //事件监听
-        WhiteTog.onValueChanged.AddListener(WhiteChoose);
-        BlackTog.onValueChanged.AddListener(BlackChoose);
+        //事件监听
+        // WhiteTog.onValueChanged.AddListener(WhiteChoose);
+        //BlackTog.onValueChanged.AddListener(BlackChoose);
+        ModelList.onValueChanged.AddListener(ModelChoose);
 
         //GUI皮肤设置
         uistyle.normal.background = image;
@@ -115,7 +117,6 @@ public class Chess : MonoBehaviour
 
     void Start()
     {
-
         //纹理初始化------
         WhitePawn = Resources.Load<Texture2D>("Icons/WhitePawn");
         WhiteRook = Resources.Load<Texture2D>("Icons/WhiteRook");
@@ -135,11 +136,12 @@ public class Chess : MonoBehaviour
         whiteTex = Resources.Load<Texture2D>("WhiteSquare");
         //------
 
-
         newBoard();
         instantiateBoard();
         attacksWhite = new AttacksTable(board, true);
         attacksBlack = new AttacksTable(board, false);
+
+
         leftCastling = false;
         rightCastling = false;
         check = false;
@@ -159,7 +161,7 @@ public class Chess : MonoBehaviour
 
         starting = true;
     }
-
+    //给棋盘的每一个位置添加标志位
     void newBoard()
     {
         board = new ChessSquare[12, 12];
@@ -247,12 +249,14 @@ public class Chess : MonoBehaviour
         }
         return false;
     }
-    //初始化围栏
+
+
     void instantiateBoard()
     {
         selectedI = 0;
         selectedJ = 0;
 
+        //初始化围栏
         for (int i = 2; i < 10; i++)
         {
             if (i % 2 == 0)
@@ -278,6 +282,8 @@ public class Chess : MonoBehaviour
                 border.GetComponent<Renderer>().material.mainTexture = blackTex;
             }
         }
+
+        //初始化棋盘
         for (int i = 2; i < 10; i++)
         {
             for (int j = 2; j < 10; j++)
@@ -293,7 +299,7 @@ public class Chess : MonoBehaviour
                     board[i, j].square = (GameObject)Instantiate(Square, new Vector3(i, 0, j), Quaternion.LookRotation(gameObject.transform.forward)) as GameObject;
                     board[i, j].square.GetComponent<Renderer>().material.mainTexture = blackTex;
                 }
-
+                //棋子生成
                 board[i, j].obj = (GameObject)Instantiate(piecePrefab, new Vector3(i, 0.1f, j), Quaternion.LookRotation(gameObject.transform.forward)) as GameObject;
                 paintPiece(i, j);
 
@@ -988,6 +994,26 @@ public class Chess : MonoBehaviour
             blackAI = true;
         }
     }
+    //对战模式选择
+    public void ModelChoose(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                whiteAI = false;
+                blackAI = true;
+                break;
+            case 1:
+                whiteAI = false;
+                blackAI = false;
+                break;
+            case 2:
+                whiteAI = true;
+                blackAI = true;
+                break;
+        }
+    }
+
     //开始游戏
     public void StartGame()
     {
@@ -1040,7 +1066,6 @@ public class Chess : MonoBehaviour
         }
         else
             Check.gameObject.SetActive(false);
-        // GUI.Box(new Rect(10, 32, 150, 22), "CHECK!");
 
         if (Time.time - checkedCooldown < 3)
         {
@@ -1051,7 +1076,6 @@ public class Chess : MonoBehaviour
         {
             KingChecked.SetActive(false);
         }
-        //GUI.Box(new Rect(Screen.width / 2 - 100, 20, 200, 22), "Ilegal Move: King checked!");
 
         if (fin)
         {
@@ -1082,7 +1106,6 @@ public class Chess : MonoBehaviour
     {
         fin = true;
         playing = false;
-        Debug.Log("GameOver");
     }
 
     void transPiece(int i, int j)
@@ -1106,6 +1129,7 @@ public class Chess : MonoBehaviour
         board[i, j].obj.GetComponent<Pieces>().shine();
     }
 
+    //棋盘上棋子的纹理
     void paintPiece(int i, int j)
     {
         if (board[i, j].sideSquare == side.None)
@@ -1389,4 +1413,5 @@ public class Chess : MonoBehaviour
     {
         return white;
     }
+
 }

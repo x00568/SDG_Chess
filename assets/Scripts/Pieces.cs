@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pieces : MonoBehaviour {
+public class Pieces : MonoBehaviour,PiecesInterface {
 
 	public void hide(){
 		gameObject.GetComponent<Renderer>().material.color = new Color(1,1,1,0);

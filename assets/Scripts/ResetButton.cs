@@ -2,30 +2,23 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-public class ResetButton : MonoBehaviour ,IPointerEnterHandler, IPointerExitHandler,IPointerClickHandler{
+public class ResetButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+{
 
     public Slider RestSlider;
-
     public bool isOver;
 
-	private float heightButtons = 20f;
-	private float widthButtons = 200f;
+    private Chess chess;
 
-	private float actualWidthButton;
-	private float cooldown;
-	private float resetTime = 0.1f;
-
-	private Chess chess;
-
-	void Start () {
-		//actualWidthButton = 0f;
-		chess = GameObject.FindObjectOfType<Chess> ();
-	}
+    void Start()
+    {
+        chess = GameObject.FindObjectOfType<Chess>();
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log(11);
         isOver = true;
     }
 
@@ -39,29 +32,11 @@ public class ResetButton : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         if (RestSlider.value >= 1)
         {
             chess.Reset();
-            Debug.Log("完成");
+            SceneManager.LoadScene(0);
         }
-            
     }
-    /*
-	void OnGUI () {
-		if (GUI.Button (new Rect (0, Screen.height - heightButtons, widthButtons, heightButtons), new GUIContent("Nueva Partida", "Boton")) &&
-		    actualWidthButton >= widthButtons){
-			chess.Reset();
-		}
-		
-		if(GUI.tooltip == "Boton"){
-			actualWidthButton += 5f;
-			if(actualWidthButton > widthButtons){
-				actualWidthButton = widthButtons;
-			}
-			GUI.Button (new Rect (0, Screen.height - heightButtons, actualWidthButton, heightButtons), "");
-			cooldown = Time.realtimeSinceStartup;
-		}
-	}
-    */
-	void Update () {
-
+    void Update()
+    {
         if (isOver)
         {
             RestSlider.value += Time.deltaTime;
@@ -70,7 +45,5 @@ public class ResetButton : MonoBehaviour ,IPointerEnterHandler, IPointerExitHand
         {
             RestSlider.value = 0;
         }
-        //if (Time.realtimeSinceStartup - cooldown > resetTime)
-        //    actualWidthButton = 0;
-	}
+    }
 }
