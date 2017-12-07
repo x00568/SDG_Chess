@@ -243,8 +243,10 @@ public class Chess : MonoBehaviour, ChessInterface
         {
             for (int j = 2; j < 10; j++)
             {
+                bool te = t.isAttacked(i, j);
                 if (b[i, j].pieceSquare == piece.King && b[i, j].sideSquare == s && t.isAttacked(i, j))
-                    return true;
+                        return true;
+                    
             }
         }
         return false;

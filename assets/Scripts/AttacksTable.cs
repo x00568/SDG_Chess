@@ -31,8 +31,12 @@ public class AttacksTable:AttackInterface
     {
         for (int k = 2; k < 10; k++)
             for (int l = 2; l < 10; l++)
+            {
+                piece p = attacks[i, j, k, l];
                 if (attacks[i, j, k, l] != piece.None)
                     return true;
+            }
+           
         return false;
     }
 
@@ -41,8 +45,12 @@ public class AttacksTable:AttackInterface
         int ret = 0;
         for (int k = 2; k < 10; k++)
             for (int l = 2; l < 10; l++)
-                if (attacks[i, j, k, l] != piece.None)
+            {
+                piece p = attacks[i, j, k, l];
+           if (attacks[i, j, k, l] != piece.None)
                     ret++;
+            }
+                
         return ret;
     }
 
