@@ -20,6 +20,10 @@ generateKing|	void|	int，int|	国王的可攻击区域
 generateKnight|	void|	int，int|	骑士的可攻击区域
 generatePawn|	void|	int，int|	禁卫军的可攻击区域
 
+
+
+
+
 ### Chess类
  定义piece和side两个结构体，用来标识位置
  方法| 返回类型 |参数类型|功能描述
@@ -44,6 +48,10 @@ lightKing|	    void|	int，int|	选择国王时，可移动区域高光显示
 lightBishop|	void|	int，int|	选择主教时，可移动区域高光显示
 theEnd|	        void|	null|	游戏结束
 Reset|	        void| 	null|	重置游戏
+
+
+
+
 
 ### AIMove类
 主要定义棋子的存储起始位置和数值的变量
