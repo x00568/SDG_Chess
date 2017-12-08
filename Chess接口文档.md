@@ -21,11 +21,9 @@ generateKnight|	void|	int，int|	骑士的可攻击区域
 generatePawn|	void|	int，int|	禁卫军的可攻击区域
 
 
-
-
-
 ### Chess类
  定义piece和side两个结构体，用来标识位置
+ 
  方法| 返回类型 |参数类型|功能描述
 ---|---|---|---
 ModelChoose|	void|	int|	    游戏模式选择
