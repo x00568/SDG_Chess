@@ -231,6 +231,7 @@
     <Compile Include="assets\Scripts\PiecesInterface.cs" />
     <Compile Include="assets\Scripts\ResetButton.cs" />
     <Compile Include="assets\Scripts\Square.cs" />
+    <Compile Include="assets\Scripts\UIManage.cs" />
     <Compile Include="assets\Scripts\UndoButton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />

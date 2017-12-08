@@ -2,7 +2,6 @@
 using System.Collections;
 public interface ChessInterface
 {
-    void StartGame();
     void Reset();
     void undo();
     void undo(int number);

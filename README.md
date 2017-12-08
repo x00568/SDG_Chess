@@ -1,2 +1,2 @@
 # chess
-A very simple chess. Take a look at the amazing AI.
+unity版本2017.2     简单的AI算法

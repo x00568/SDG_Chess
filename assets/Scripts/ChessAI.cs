@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+using System.Collections.Generic;
 
 class AIMove
 {
@@ -14,30 +14,23 @@ class AIMove
 public class ChessAI : MonoBehaviour
 {
 
-    private Text AIText;
-    private Image AIBG;
-
     private ChessSquare[,] board;
     private Chess chess;
 
     private AIMove selectedMove;
 
-    private int state; /* 0 = nothing, 1 = thinking, 2 = selecting, 3 = moving */
+    public int state; /* 0 = nothing, 1 = thinking, 2 = selecting, 3 = moving */
 
-    private float cooldown;
+    public float cooldown;
     private bool initial;
 
-    private ArrayList checkBreakers;
-    private ArrayList attackMoves;
-    private ArrayList randomMoves;
+    private List<AIMove> checkBreakers;
+    private List<AIMove> attackMoves;
+    private List<AIMove> randomMoves;
 
     private bool waitingPromotion;
 
-    void Awake()
-    {
-        AIText = GameObject.Find("Canvas/GamePanel/AIBG/AIText").GetComponent<Text>();
-        AIBG = GameObject.Find("Canvas/GamePanel/AIBG").GetComponent<Image>();
-    }
+
     void Start()
     {
         state = 0;
@@ -106,8 +99,8 @@ public class ChessAI : MonoBehaviour
     {
         if (initial)
         {
-            ArrayList moves = gimmeMoves(s);
-            checkBreakers = new ArrayList();
+            List<AIMove> moves = gimmeMoves(s);
+            checkBreakers = new List<AIMove>();
 
             foreach (AIMove m in moves)
             {
@@ -129,8 +122,8 @@ public class ChessAI : MonoBehaviour
     {
         if (initial)
         {
-            ArrayList moves = gimmeMoves(s);
-            attackMoves = new ArrayList();
+            List<AIMove> moves = gimmeMoves(s);
+            attackMoves = new List<AIMove>();
             foreach (AIMove m in moves)
                 if (m.eatenValue != 0)
                     attackMoves.Add(m);
@@ -147,7 +140,7 @@ public class ChessAI : MonoBehaviour
 
     AIMove selectRandom(side s)
     {
-        ArrayList aux;
+        List<AIMove> aux;
         AIMove ret;
 
         if (initial)
@@ -161,30 +154,7 @@ public class ChessAI : MonoBehaviour
         return ret;
     }
 
-    void OnGUI()
-    {
-        if (state == 1)
-        {
-            AIBG.gameObject.SetActive(true);
-            AIText.text = "电脑选择棋子";
-            return;
-        }
-        if (state > 1)
-        {
-            AIBG.gameObject.SetActive(true);
-            AIText.text = "电脑正在思考";
-            return;
-        }
-        if (state == 0 && Time.time - cooldown < 1)
-        {
-            AIBG.gameObject.SetActive(true);
-            AIText.text = "电脑完成操作";
-            return;
-        }
 
-        AIBG.gameObject.SetActive(false);
-        AIText.text = "";
-    }
 
     void Update()
     {
@@ -225,9 +195,9 @@ public class ChessAI : MonoBehaviour
             chess.promoteQueen();
     }
 
-    ArrayList pawnMoves(int i, int j)
+    List<AIMove> pawnMoves(int i, int j)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         int mov = 1;
         if (board[i, j].sideSquare == side.Black)
@@ -259,9 +229,9 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    ArrayList knightMoves(int i, int j)
+    List<AIMove> knightMoves(int i, int j)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         if (board[i + 2, j + 1].sideSquare != board[i, j].sideSquare && board[i + 2, j + 1].sideSquare != side.OutOfBoard)
         {
@@ -306,9 +276,9 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    ArrayList rookMoves(int i, int j)
+    List<AIMove> rookMoves(int i, int j)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         for (int x = 1; ; x++)
         {
@@ -384,9 +354,9 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    ArrayList kingMoves(int i, int j)
+    List<AIMove> kingMoves(int i, int j)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         if (board[i + 1, j + 1].sideSquare != board[i, j].sideSquare &&
            board[i + 1, j + 1].sideSquare != side.OutOfBoard)
@@ -432,9 +402,9 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    ArrayList bishopMoves(int i, int j)
+    List<AIMove> bishopMoves(int i, int j)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         for (int x = 1; ; x++)
         {
@@ -528,9 +498,9 @@ public class ChessAI : MonoBehaviour
         return move;
     }
 
-    ArrayList gimmeMoves(side s)
+    List<AIMove> gimmeMoves(side s)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         for (int i = 2; i < 10; i++)
         {
@@ -575,9 +545,9 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    ArrayList gimmeNoKingMoves(side s)
+    List<AIMove> gimmeNoKingMoves(side s)
     {
-        ArrayList moves = new ArrayList();
+        List<AIMove> moves = new List<AIMove>();
 
         for (int i = 2; i < 10; i++)
         {
@@ -618,7 +588,7 @@ public class ChessAI : MonoBehaviour
         return moves;
     }
 
-    AIMove selectMoveAttack(ArrayList list)
+    AIMove selectMoveAttack(List<AIMove> list)
     {
         if (list.Count == 0)
             return null;
@@ -642,20 +612,20 @@ public class ChessAI : MonoBehaviour
         return (AIMove)list[list.Count - 1];
     }
 
-    ArrayList selectAttacksDefensive(ArrayList list)
+    List<AIMove> selectAttacksDefensive(List<AIMove> list)
     {
         AttacksTable t = chess.attacksBlack;
         if (chess.isWhiteTurn())
             t = chess.attacksWhite;
 
-        ArrayList aux = new ArrayList();
+        List<AIMove> aux = new List<AIMove>();
         foreach (AIMove mov in list)
             if (mov.eatenValue >= mov.movedValue || t.numAttacking(mov.finalPos) > 2)
                 aux.Add(mov);
         return aux;
     }
 
-    ArrayList selectMovesDefensive(ArrayList list)
+    List<AIMove> selectMovesDefensive(List<AIMove> list)
     {
         AttacksTable mine = chess.attacksBlack;
         AttacksTable their = chess.attacksWhite;
@@ -665,19 +635,19 @@ public class ChessAI : MonoBehaviour
             their = chess.attacksBlack;
         }
 
-        ArrayList aux = new ArrayList();
+        List<AIMove> aux = new List<AIMove>();
         foreach (AIMove mov in list)
             if (their.numAttacking(mov.finalPos) < mine.numAttacking(mov.finalPos))
                 aux.Add(mov);
         return aux;
     }
 
-    AIMove selectMoveByRisk(ArrayList list)
+    AIMove selectMoveByRisk(List<AIMove> list)
     {
         if (list.Count == 0)
             return null;
 
-        ArrayList aux = new ArrayList();
+        List<AIMove> aux = new List<AIMove>();
         int max = 0;
         foreach (AIMove mov in list)
         {
@@ -700,9 +670,9 @@ public class ChessAI : MonoBehaviour
         return (AIMove)aux[list.Count - 1];
     }
 
-    ArrayList selectMovesOfRisk(ArrayList list, int risk)
+    List<AIMove> selectMovesOfRisk(List<AIMove> list, int risk)
     {
-        ArrayList aux = new ArrayList();
+        List<AIMove> aux = new List<AIMove>();
         foreach (AIMove mov in list)
             if (mov.risk == risk)
                 aux.Add(mov);
@@ -714,27 +684,21 @@ public class ChessAI : MonoBehaviour
         switch (p)
         {
             case piece.Bishop:
-                Debug.Log("Bishop");
                 return 3;
 
             case piece.Rook:
-                Debug.Log("Rook");
                 return 5;
 
             case piece.Knight:
-                Debug.Log("Knight");
                 return 3;
 
             case piece.King:
-                Debug.Log("King");
                 return 1000;
 
             case piece.Pawn:
-                Debug.Log("Pawn");
                 return 1;
 
             case piece.Queen:
-                Debug.Log("Queen");
                 return 9;
 
             default:

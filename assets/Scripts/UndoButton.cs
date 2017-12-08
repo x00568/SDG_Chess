@@ -32,25 +32,25 @@ public class UndoButton : MonoBehaviour
             return;
 
         if (chess.getEnemyPlaying() || chess.getHistory().Count == 0)
-            GUI.Box(new Rect(Screen.width - 300, 120, 200, 80), "悔棋!", uistyle);
-        else if (GUI.Button(new Rect(Screen.width - 300, 120, 200, 80), "悔棋!", uistyle))
+            GUI.Box(new Rect(Screen.width - 210, 120, 200, 80), "悔棋!", uistyle);
+        else if (GUI.Button(new Rect(Screen.width - 210, 120, 200, 80), "悔棋!", uistyle))
             chess.undo();
 
         if (insideMenu || insideButton)
         {
             for (int i = 1; i <= chess.getHistory().Count; i++)
             {
-                if (GUI.Button(new Rect(Screen.width - 260, 150 + 50 * i, 200, 50), (chess.getHistory().Count - i + 1) + ". " + ((ChessMove)chess.getHistory()[chess.getHistory().Count - i]).ToString(), uistyle1))
+                if (GUI.Button(new Rect(Screen.width - 170, 150 + 50 * i, 200, 50), (chess.getHistory().Count - i + 1) + ". " + ((ChessMove)chess.getHistory()[chess.getHistory().Count - i]).ToString(), uistyle1))
                     chess.undo(i);
             }
             for (int i = 1; i <= chess.getHistory().Count; i++)
             {
                 if (chess.isWhiteTurn() && i % 2 == 1)
-                    GUI.Box(new Rect(Screen.width - 300, 155 + 50 * i, 40, 40), chess.getBlackTex(), uistyle1);
+                    GUI.Box(new Rect(Screen.width - 210, 155 + 50 * i, 40, 40), chess.getBlackTex(), uistyle1);
                 else if (!chess.isWhiteTurn() && i % 2 == 0)
-                    GUI.Box(new Rect(Screen.width - 300, 155 + 50 * i, 40, 40), chess.getBlackTex(), uistyle1);
+                    GUI.Box(new Rect(Screen.width - 210, 155 + 50 * i, 40, 40), chess.getBlackTex(), uistyle1);
                 else
-                    GUI.Box(new Rect(Screen.width - 300, 155 + 50 * i, 40, 40), chess.getWhiteTex(), uistyle1);
+                    GUI.Box(new Rect(Screen.width - 210, 155 + 50 * i, 40, 40), chess.getWhiteTex(), uistyle1);
             }
         }
     }
@@ -65,14 +65,14 @@ public class UndoButton : MonoBehaviour
         }
 
         if (Input.mousePosition.y < (Screen.height - 120) && Input.mousePosition.y > (Screen.height - 200) &&
-            Input.mousePosition.x > Screen.width - 300 && Input.mousePosition.x < Screen.width - 100)
+            Input.mousePosition.x > Screen.width - 210 && Input.mousePosition.x < Screen.width - 100)
         {
             insideButton = true;
             cooldown = Time.realtimeSinceStartup;
         }
 
         if (insideButton && Input.mousePosition.y <= (Screen.height - 200) && Input.mousePosition.y >= (Screen.height - (200 + 50 * (chess.getHistory().Count + 1))) &&
-            Input.mousePosition.x >= Screen.width -300 && Input.mousePosition.x <= Screen.width - 100)
+            Input.mousePosition.x >= Screen.width -210 && Input.mousePosition.x <= Screen.width - 100)
         {
             insideMenu = true;
             cooldown = Time.realtimeSinceStartup;

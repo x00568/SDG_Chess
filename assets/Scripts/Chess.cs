@@ -8,105 +8,57 @@ public enum side { Black, White, None, OutOfBoard };
 public class Chess : MonoBehaviour, ChessInterface
 {
 
-    //UI
-    public Toggle WhiteTog;
-    public Toggle BlackTog;
-    public GameObject GameOverBG;
-    public Text GameOverText;
-    public GameObject Check;
-    public Text CheckText;
-    public Dropdown ModelList;
-
-    public GameObject KingChecked;
-    public Text KingCheckedText;
-
-    private GameObject StartPanel;
-    private Text TrunText;
-
-    public Texture2D image;
-    GUIStyle uistyle = new GUIStyle();
-
-    void Awake()
-    {
-        StartPanel = GameObject.Find("Canvas/StartPanel");
-        TrunText = GameObject.Find("Canvas/GamePanel/TurnBG/TurnText").GetComponent<Text>();
-
-        //事件监听
-        // WhiteTog.onValueChanged.AddListener(WhiteChoose);
-        //BlackTog.onValueChanged.AddListener(BlackChoose);
-        ModelList.onValueChanged.AddListener(ModelChoose);
-
-        //GUI皮肤设置
-        uistyle.normal.background = image;
-        uistyle.fontSize = 30;
-        uistyle.alignment = TextAnchor.MiddleCenter;
-
-    }
-
     //象棋方形底盘
     public GameObject Square;
     //棋盘的护栏
     public GameObject Border;
     //棋子的预制体
     public GameObject piecePrefab;
-    //黑色棋子纹理
+    //黑色棋子纹理，白色棋子纹理
     private Texture2D blackTex;
-    //白色棋子纹理
     private Texture2D whiteTex;
 
     private ChessSquare[,] board;
 
-    //白色禁卫军的纹理--兵
+    //白色禁卫军的纹理--兵，车，象，后，王，马
     private Texture2D WhitePawn;
-    //白色战车的纹理--车
     private Texture2D WhiteRook;
-    //白色主教的纹理--象
     private Texture2D WhiteBishop;
-    //白色皇后的纹理--后
     private Texture2D WhiteQueen;
-    //白色国王纹理--王
     private Texture2D WhiteKing;
-    //白色骑士纹理--马
     private Texture2D WhiteKnight;
-
-    //黑色禁卫军的纹理--兵
     private Texture2D BlackPawn;
-    //黑色战车的纹理--车
     private Texture2D BlackRook;
-    //黑色主教的纹理--象
     private Texture2D BlackBishop;
-    //黑色皇后的纹理--后
     private Texture2D BlackQueen;
-    //黑色国王纹理--王
     private Texture2D BlackKing;
-    //黑色骑士纹理--马
     private Texture2D BlackKnight;
 
     private int selectedI;
     private int selectedJ;
 
-    private bool white;
-    private bool check;
-    private bool promotion;
+    public bool white;
+    public bool check;
+    public bool promotion;
 
-    private bool leftCastling;
-    private bool rightCastling;
+    public bool leftCastling;
+    public bool rightCastling;
 
     public AttacksTable attacksWhite;
     public AttacksTable attacksBlack;
 
     //开始、对战、结束
-    private bool starting;
-    private bool playing;
-    private bool fin;
+    public bool starting;
+    public bool playing;
+    public bool fin;
 
     //检查冷却时间
-    private float checkedCooldown;
+    public float checkedCooldown;
     //历史记录
     private ArrayList history;
 
-    private bool whiteAI = true;
-    private bool blackAI = false;
+    public bool whiteAI = true;
+    public bool blackAI = false;
 
     //电脑AI
     private ChessAI enemy;
@@ -243,15 +195,13 @@ public class Chess : MonoBehaviour, ChessInterface
         {
             for (int j = 2; j < 10; j++)
             {
-                bool te = t.isAttacked(i, j);
                 if (b[i, j].pieceSquare == piece.King && b[i, j].sideSquare == s && t.isAttacked(i, j))
-                        return true;
-                    
+                    return true;
+
             }
         }
         return false;
     }
-
 
     void instantiateBoard()
     {
@@ -334,24 +284,20 @@ public class Chess : MonoBehaviour, ChessInterface
         move.eatenMoved = board[i, j].moved;
         move.movingPiece = board[selectedI, selectedJ].pieceSquare;
 
-        /* Guardamos los datos de las 2 */
         //把数据赋值
         ChessSquare oldInitial = board[selectedI, selectedJ].Clone();
         ChessSquare oldNext = board[i, j].Clone();
 
-        /* Se copian los datos de la ficha */
         //复制的数据记录
         board[i, j].sideSquare = board[selectedI, selectedJ].sideSquare;
         board[i, j].pieceSquare = board[selectedI, selectedJ].pieceSquare;
         board[i, j].moved = true;
 
-        /* Se formatea la antigua celda */
         //旧的棋子位置需要更新状态，也就是格式化
         board[selectedI, selectedJ].sideSquare = side.None;
         board[selectedI, selectedJ].pieceSquare = piece.None;
         board[selectedI, selectedJ].moved = true;
 
-        /* Comprobamos futuro jaque. Restablecemos si es invalido el movimiento. */
         //检查是否可以移动
         AttacksTable t = new AttacksTable(board, !white);
         if (checkCheck(board, oldInitial.sideSquare, t))
@@ -369,14 +315,12 @@ public class Chess : MonoBehaviour, ChessInterface
         }
 
 
-        /* Se paran los botecitos y se desplaza la ficha */
         //棋子移动以及棋子移动后的状态调整
         board[i, j].obj.GetComponent<Bouncy>().stopBounce();//棋子动画停止
         paintPiece(i, j);//棋子移动，具体操作将棋子的贴图赋给选择的棋盘位置上的棋子
         showPiece(i, j);//让选择的棋盘为指导上的棋子显示出来
         hidePiece(selectedI, selectedJ);//棋子移动后，原位置上的棋子隐藏
 
-        /* Se comprueba coronamiento y se efectua */
         if (board[i, j].pieceSquare == piece.Pawn && (i == 9 || i == 2))
         {
             selectedI = i;
@@ -409,7 +353,6 @@ public class Chess : MonoBehaviour, ChessInterface
     {
         Deselect();
 
-        /* No se seleccionan casillas vacias, inexistentes, o del bando que no juega */
         if (board[i, j].pieceSquare == piece.None || board[i, j].pieceSquare == piece.OutOfBoard)
             return false;
         if (board[i, j].sideSquare == side.Black && white)
@@ -970,139 +913,6 @@ public class Chess : MonoBehaviour, ChessInterface
         }
     }
 
-    //白色方
-    public void WhiteChoose(bool IsOn)
-    {
-        if (IsOn)
-        {
-            whiteAI = false;
-            WhiteTog.gameObject.transform.Find("Label").GetComponent<Text>().text = "人";
-        }
-        else
-        {
-            WhiteTog.gameObject.transform.Find("Label").GetComponent<Text>().text = "机器";
-            whiteAI = true;
-        }
-    }
-    //黑色方
-    public void BlackChoose(bool IsOn)
-    {
-        if (IsOn)
-        {
-            blackAI = false;
-            BlackTog.gameObject.transform.Find("Label").GetComponent<Text>().text = "人";
-        }
-        else
-        {
-            BlackTog.gameObject.transform.Find("Label").GetComponent<Text>().text = "机器";
-            blackAI = true;
-        }
-    }
-    //对战模式选择
-    public void ModelChoose(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                whiteAI = false;
-                blackAI = true;
-                break;
-            case 1:
-                whiteAI = false;
-                blackAI = false;
-                break;
-            case 2:
-                whiteAI = true;
-                blackAI = true;
-                break;
-        }
-    }
-
-    //开始游戏
-    public void StartGame()
-    {
-        starting = false;
-        StartPanel.SetActive(false);
-    }
-
-    void OnGUI()
-    {
-
-        if (white)
-        {
-            TrunText.text = "轮到白方了";
-        }
-        else
-        {
-            TrunText.text = "轮到黑方了";
-        }
-
-        if (rightCastling)
-            if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 32, 150, 22), "Enroque Derecho"))
-                rightCastle();
-        if (leftCastling)
-            if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 52, 150, 22), "Enroque Izquierdo"))
-                leftCastle();
-
-        if (promotion)
-        {
-            if (!playing)
-            {
-                GUI.Box(new Rect(Screen.width - 160, Screen.height - 32, 150, 22), "Promocionar a Reina");
-                GUI.Box(new Rect(Screen.width - 160, Screen.height - 52, 150, 22), "Promocionar a Caballo");
-            }
-            else
-            {
-                if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 32, 150, 22), "Promocionar a Reina"))
-                {
-                    promoteQueen();
-                }
-                if (GUI.Button(new Rect(Screen.width - 160, Screen.height - 52, 150, 22), "Promocionar a Caballo"))
-                {
-                    promoteKnight();
-                }
-            }
-        }
-        if (check)
-        {
-            Check.gameObject.SetActive(true);
-            CheckText.text = "CHECK!";
-        }
-        else
-            Check.gameObject.SetActive(false);
-
-        if (Time.time - checkedCooldown < 3)
-        {
-            KingChecked.SetActive(true);
-            KingCheckedText.text = "Ilegal Move: King checked!";
-        }
-        else
-        {
-            KingChecked.SetActive(false);
-        }
-
-        if (fin)
-        {
-            GameOverBG.SetActive(true);
-            if (white)
-                GameOverText.text = "黑方胜";
-            else 
-                GameOverText.text = "白方胜";
-        }
-        else
-        {
-            if (starting == false)
-            {
-                if (!playing)
-                    GUI.Box(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle);
-                else if (GUI.Button(new Rect(Screen.width - 300, 20, 200, 80), "认输!", uistyle))
-                {
-                    theEnd();
-                    white = false;
-                }
-            }
-        }
-    }
 
     public void theEnd()
     {
@@ -1313,8 +1123,7 @@ public class Chess : MonoBehaviour, ChessInterface
         turnCD = Time.time;
 
         starting = true;
-        StartPanel.SetActive(true);
-        GameOverBG.SetActive(false);
+
     }
 
     void resetBoard()
@@ -1415,5 +1224,4 @@ public class Chess : MonoBehaviour, ChessInterface
     {
         return white;
     }
-
 }

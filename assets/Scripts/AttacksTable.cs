@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AttacksTable:AttackInterface
+public class AttacksTable : AttackInterface
 {
 
     private ChessSquare[,] board;
@@ -32,11 +32,10 @@ public class AttacksTable:AttackInterface
         for (int k = 2; k < 10; k++)
             for (int l = 2; l < 10; l++)
             {
-                piece p = attacks[i, j, k, l];
                 if (attacks[i, j, k, l] != piece.None)
                     return true;
             }
-           
+
         return false;
     }
 
@@ -46,15 +45,14 @@ public class AttacksTable:AttackInterface
         for (int k = 2; k < 10; k++)
             for (int l = 2; l < 10; l++)
             {
-                piece p = attacks[i, j, k, l];
-           if (attacks[i, j, k, l] != piece.None)
+                if (attacks[i, j, k, l] != piece.None)
                     ret++;
             }
-                
+
         return ret;
     }
 
-   public void generateTable(side attacker)
+    public void generateTable(side attacker)
     {
         attacks = new piece[12, 12, 12, 12];
         for (int i = 0; i < 12; i++)
