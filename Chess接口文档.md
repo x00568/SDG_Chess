@@ -53,6 +53,7 @@ Reset|	        void| 	null|	重置游戏
 
 ### AIMove类
 主要定义棋子的存储起始位置和数值的变量
+
  方法| 返回类型 |参数类型|功能描述
 ---|---|---|---
 go|	                void|	        数组|	选择电脑时调用
@@ -75,6 +76,7 @@ gimmeValue|	        int	 |      piece|	给棋子加权重值
 
 ### Pieces类
 棋子状态类，棋子在不同情况下所表现的不同状态
+
  方法| 返回类型 |参数类型|功能描述
 ---|---|---|---
 hide|	        void|	null|	隐藏棋子
@@ -83,6 +85,7 @@ translucent| 	void|	null|	棋子半透明
 shine|	        void|	null|	棋子高光
 ### Square类
 棋盘状态类，选择棋子时棋盘颜色变化
+
  方法| 返回类型 |参数类型|功能描述
 ---|---|---|---
 resetColor|	    void|	null|	棋盘恢复原始颜色
@@ -93,6 +96,7 @@ OnMouseExit	|    void|	null|	鼠标离开棋子
 OnMouseDown|	    void|	null|	鼠标选择或者手势选择棋子
 ### UIManage类
 UI管理
+
 方法| 返回类型 |参数类型|功能描述
 ---|---|---|---
 StartGame| void| void | 点击开始按钮触发
